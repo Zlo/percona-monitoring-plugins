@@ -218,13 +218,14 @@ EOF;
 # ============================================================================
 function parse_cmdline( $args ) {
    $options = array();
-   while (list($tmp, $p) = each($args)) {
+   for ($i = 0; $i < count($args); $i++) {
+      $p = $args[$i];
       if (strpos($p, '--') === 0) {
          $param = substr($p, 2);
          $value = null;
-         $nextparam = current($args);
-         if ($nextparam !== false && strpos($nextparam, '--') !==0) {
-            list($tmp, $value) = each($args);
+         $nextparam = isset($args[$i+1]) ? $args[$i+1] : null;
+         if ($nextparam !== null && strpos($nextparam, '--') !== 0) {
+            $value = $nextparam;
          }
          $options[$param] = $value;
       }
