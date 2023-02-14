@@ -215,24 +215,40 @@ Usage: php ss_get_mysql_stats.php --host <host> --items <item,...> [OPTION]
 EOF;
    die($usage);
 }
-
 # ============================================================================
 # Parse command-line arguments, in the format --arg value --arg value, and
 # return them as an array ( arg => value )
 # ============================================================================
 function parse_cmdline( $args ) {
    $options = array();
-   while (list($tmp, $p) = each($args)) {
-      if (strpos($p, '--') === 0) {
-         $param = substr($p, 2);
-         $value = null;
-         $nextparam = current($args);
-         if ($nextparam !== false && strpos($nextparam, '--') !==0) {
-            list($tmp, $value) = each($args);
+
+   /*
+      we will receive args as pairs of array elements from argv, but they are
+      separate array items (not separated with equals sign), so we will need to do
+      some gymnastics to get what we want here.
+   */
+   $current_key = ''; // the current key name of the argument we are processing
+   // this will hop between empty string and key name as we process each key/value pair
+
+   foreach($args as $arg) {
+      if (strpos($arg, '--') === 0) {
+         if (strlen($current_key) > 0) {
+            // if we are starting a new switch before seeing a value, we will have to assume this is an empty string arg
+            $options[$current_key] = '';
          }
-         $options[$param] = $value;
+         $current_key = substr($arg, 2); // cut off the '--'
+      }
+      else if (strlen($current_key) > 0) {
+         // process the value for the current key we are dealing with
+         $options[$current_key] = $arg;
+         $current_key = '';
+      }
+      else {
+         fwrite(STDERR, "Found a value for an argument, but we are not currently processing a key. Please provide arguments in pairs of '--arg value'.");
+         exit(1);
       }
    }
+
    if ( array_key_exists('host', $options) ) {
       $options['host'] = substr($options['host'], 0, 4) == 'tcp:' ? substr($options['host'], 4) : $options['host'];
    }

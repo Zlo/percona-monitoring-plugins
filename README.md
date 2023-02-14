@@ -1,3 +1,9 @@
+This fork exists only to provide compatibility updates to the Cacti script `ss_get_by_ssh.php` and `ss_get_mysql_stats.php` for PHP 8.
+
+
+The original README follows below.
+
+
 # ⚠ Percona Monitoring Plugins is End of Life ⚠
 
 Effective August 1, 2020, Percona moved the Percona Monitoring Plugins to end of life status. This means that open PRs and issues cannot be addressed. No new versions, enhancements, bug fixes, or security updates will be released. The software will continue to be available at our [download site](https://www.percona.com/downloads/percona-monitoring-plugins/LATEST/).
