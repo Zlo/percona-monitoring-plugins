@@ -1,4 +1,4 @@
-This fork exists only to provide compatibility updates to the Cacti script `ss_get_by_ssh.php` and `ss_get_mysql_stats.php` for PHP 8.
+This fork exists only to provide compatibility updates to the Cacti script [ss_get_by_ssh.php](https://github.com/PeterUpfold/percona-monitoring-plugins/blob/master/cacti/scripts/ss_get_by_ssh.php) and [ss_get_mysql_stats.php](https://github.com/PeterUpfold/percona-monitoring-plugins/blob/master/cacti/scripts/ss_get_mysql_stats.php) for PHP 8.
 
 
 The original README follows below.
