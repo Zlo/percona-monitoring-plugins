@@ -338,12 +338,20 @@ function ss_get_mysql_stats( $options ) {
       $conn = mysqli_init();
       $conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, $connection_timeout);
       mysqli_ssl_set($conn, $mysql_ssl_key, $mysql_ssl_cert, $mysql_ssl_ca, NULL, NULL);
-      mysqli_real_connect($conn, $host, $user, $pass, NULL, $port, $socket, $flags);
+      try {
+         mysqli_real_connect($conn, $host, $user, $pass, NULL, $port, $socket, $flags);
+      } catch (mysqli_sql_exception $e) {
+
+      }
    }
    else {
       $conn = mysqli_init();
       $conn->options(MYSQLI_OPT_CONNECT_TIMEOUT, $connection_timeout);
-      mysqli_real_connect($conn, $host, $user, $pass, NULL, $port, $socket, $flags);
+      try {
+         mysqli_real_connect($conn, $host, $user, $pass, NULL, $port, $socket, $flags);
+      } catch (mysqli_sql_exception $e) {
+
+      }
    }
    if ( mysqli_connect_errno() ) {
       debug("MySQL connection failed: " . mysqli_connect_error());
@@ -1297,7 +1305,12 @@ function to_int ( $str ) {
 function run_query($sql, $conn) {
    global $debug;
    debug($sql);
-   $result = @mysqli_query($conn, $sql);
+   $result = false;
+   try {
+      $result = @mysqli_query($conn, $sql);
+   } catch (mysqli_sql_exception $e) {
+
+   }
    if ( $debug && strpos($sql, 'SHOW SLAVE STATUS ') === false ) {
       $error = @mysqli_error($conn);
       if ( $error ) {
@@ -1306,13 +1319,15 @@ function run_query($sql, $conn) {
       }
    }
    $array = array();
-   $count = @mysqli_num_rows($result);
-   if ( $count > 10000 ) {
-      debug('Abnormal number of rows returned: ' . $count);
-   }
-   else {
-      while ( $row = @mysqli_fetch_array($result) ) {
-         $array[] = $row;
+   if ($result !== false) {
+      $count = @mysqli_num_rows($result);
+      if ( $count > 10000 ) {
+         debug('Abnormal number of rows returned: ' . $count);
+      }
+      else {
+         while ( $row = @mysqli_fetch_array($result) ) {
+            $array[] = $row;
+         }
       }
    }
    debug(array($sql, $array));
