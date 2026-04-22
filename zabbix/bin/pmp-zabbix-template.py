@@ -100,7 +100,7 @@ for o, a in opts:
     if o == "-v":
         verbose = True
     elif o in ("-h", "--help"):
-        print usage
+        print(usage)
         sys.exit()
     elif o in ("-o", "--output"):
         output = a
@@ -302,7 +302,7 @@ if output == 'xml':
 
     # Convert and write XML
     xml = dict2xml.Converter(wrap='zabbix_export', indent='  ').build(tmpl)
-    print '<?xml version="1.0" encoding="UTF-8"?>\n%s' % xml
+    print('<?xml version="1.0" encoding="UTF-8"?>\n%s' % xml)
 
 elif output == 'config':
     # Read Perl hash aka MAGIC_VARS_DEFINITIONS from Cacti PHP script
@@ -322,7 +322,7 @@ elif output == 'config':
 
     # Write Zabbix agent config
     for item in all_item_keys:
-        print "UserParameter=%s,%s/get_mysql_stats_wrapper.sh %s" % (format_item(item), ZABBIX_SCRIPT_PATH, data[item])
+        print("UserParameter=%s,%s/get_mysql_stats_wrapper.sh %s" % (format_item(item), ZABBIX_SCRIPT_PATH, data[item]))
 
     # Write extra items
-    print "UserParameter=%s,%s/get_mysql_stats_wrapper.sh running-slave" % (format_item('running-slave'), ZABBIX_SCRIPT_PATH)
+    print("UserParameter=%s,%s/get_mysql_stats_wrapper.sh running-slave" % (format_item('running-slave'), ZABBIX_SCRIPT_PATH))

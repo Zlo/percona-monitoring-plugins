@@ -1,6 +1,8 @@
-import collections
+import collections.abc as collections
 
 # Grabbed from https://github.com/delfick/python-dict2xml/blob/master/dict2xml/logic.py
+
+unicode = type(u'')
 
 ########################
 # ##   NODE
@@ -32,7 +34,7 @@ class Node(object):
         self.data = data
         self.type = self.determine_type()
 
-        if self.type == 'flat' and isinstance(self.data, basestring):
+        if self.type == 'flat' and isinstance(self.data, str):
             # Make sure we deal with entities
             for entity, replacement in self.entities:
                 self.data = self.data.replace(entity, replacement)
